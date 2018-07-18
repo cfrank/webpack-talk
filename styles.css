@@ -1,0 +1,47 @@
+:root {
+    --color-malibu: rgb(141, 214, 249);
+    --color-denim: rgb(29, 120, 193);
+    --color-fiord: rgb(70, 94, 105);
+    --color-outer-space: rgb(43, 58, 66);
+    --color-white: rgb(255, 255, 255);
+    --color-concrete: rgb(242, 242, 242);
+    --color-mine-shaft: rgb(51, 51, 51);
+
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-semi-bold: 600;
+    --font-weight-bold: 700;
+}
+
+p {
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.reveal {
+    font-size: 50px;
+}
+
+/* Copied from the default reveal.js theme */
+.reveal pre {
+  display: block;
+  position: relative;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+}
+
+.reveal code {
+  font-family: monospace;
+  text-transform: none;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 20px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+}

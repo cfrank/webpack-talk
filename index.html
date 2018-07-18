@@ -6,17 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Webpack</title>
-    <link rel="stylesheet" href="./node_modules/reveal.js/css/reveal.css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700" rel="stylesheet">
+    <link rel="stylesheet" href="./node_modules/reveal.js/css/reveal.css" />
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="syntax.css">
+    <script src="./node_modules/headjs/dist/1.0.0/head.min.js"></script>
 </head>
 
 <body>
     <div class="reveal">
         <div class="slides">
-            <section class="introduction slide">
-                <p>Hello world</p>
+            <section class="opening slide" data-background="var(--color-outer-space)">
+                <img src="assets/webpack.svg" />
             </section>
-            <section class="closing slide">
+            <section class="interior slide" data-background="var(--color-concrete)">
+                <pre>
+<code>const path = require('path');
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  }
+};
+</code>
+                </pre>
+            </section>
+            <section class="closing slide" data-background="var(--color-concrete)">
                 <p>Goodbye world</p>
             </section>
         </div>
@@ -29,7 +46,21 @@
             progress: false,
             overview: false,
             help: false,
+            history: true,
             transition: 'fade',
+            dependencies: [
+                {
+                    src: './node_modules/reveal.js/plugin/highlight/highlight.js',
+                    async: true,
+                    callback: () => {
+                        hljs.configure({
+                            languages: ['html', 'javascript', 'jsx']
+                        });
+
+                        hljs.initHighlightingOnLoad();
+                    }
+                },
+            ],
         });
     </script>
 </body>

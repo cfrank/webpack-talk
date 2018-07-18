@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/cfrank/webpack-talk#readme",
   "dependencies": {
+    "headjs": "^1.0.3",
     "reveal.js": "^3.6.0"
   }
 }

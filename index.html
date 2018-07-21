@@ -17,7 +17,7 @@
     <div class="reveal">
         <div class="slides">
             <section class="opening slide dark" data-background="var(--color-outer-space)">
-                <img src="assets/webpack.svg" />
+                <img src="assets/webpack.svg" alt="Webpack Logo" />
             </section>
             <section class="assumptions-title slide dark" data-background="var(--color-outer-space)">
                 <h1>Assumptions</h1>
@@ -31,18 +31,55 @@
                 </ul>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
+                <img src="assets/pool-pros.png" alt="Pool Pros Logo" />
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>const path = require('path');
-
-module.exports = {
-  entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
-  }
-};
+<code>"scripts": {
+    "build": "webpack --mode=development",
+    "dev": "webpack-dev-server --mode=development",
+}
 </code>
                 </pre>
+            </section>
+            <section>
+                <pre>
+<code data-trim data-noescape>
+Asset    Size          Chunks          Chunk Names
+[image]  245 bytes     [emitted]
+[image]  575 bytes     [emitted]
+...
+app.css  33.8KiB       0 [emitted]     app
+app.js   4.12MiB       0 [emitted]     app
+</code>
+                </pre>
+            </section>
+            <section>
+                <pre>
+<code>"scripts": {
+    "build": "webpack --mode=production",
+    "dev": "webpack-dev-server --mode=development",
+}
+</code>
+                </pre>
+            </section>
+            <section class="interior slide light gist">
+                <script src="https://gist.github.com/cfrank/bfd24d2094544e939959189e29c9b8f4.js"></script>
+            </section>
+            <section>
+                <pre>
+<code data-trim data-noescape>
+Asset    Size          Chunks          Chunk Names
+[image]  245 bytes     [emitted]
+[image]  575 bytes     [emitted]
+...
+app.css  33.8KiB       0 [emitted]     app
+<mark>app.js   2.19MiB       0 [emitted]     [big] app</mark>
+</code>
+                </pre>
+                <span class="fragment">
+                    <img src="assets/grimacing.svg" />
+                </span>
             </section>
             <section class="closing slide dark" data-background="var(--color-outer-space)">
                 <p>Goodbye world</p>

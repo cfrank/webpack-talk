@@ -26,6 +26,11 @@
     color: var(--color-concrete);
 }
 
+.slide.gist {
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
 .slide > h1 {
     font-size: 60px;
     text-transform: uppercase;

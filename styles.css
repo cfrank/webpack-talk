@@ -26,6 +26,10 @@
     color: var(--color-concrete);
 }
 
+.slide.light .text-mark {
+    color: #4ab576;
+}
+
 .slide.gist {
     max-height: 100%;
     overflow-y: scroll;

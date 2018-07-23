@@ -26,8 +26,6 @@
                 <ul>
                     <li>Webpack Experience</li>
                     <li>Webpack Version 4</li>
-                    <li>Medium / Large use case</li>
-                    <li>Ability / Time to profile</li>
                 </ul>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
@@ -36,35 +34,11 @@
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
 <code>"scripts": {
-    "build": "webpack --mode=development",
+    "build": "webpack",
     "dev": "webpack-dev-server --mode=development",
 }
 </code>
                 </pre>
-            </section>
-            <section>
-                <pre>
-<code data-trim data-noescape>
-Asset    Size          Chunks          Chunk Names
-[image]  245 bytes     [emitted]
-[image]  575 bytes     [emitted]
-...
-app.css  33.8KiB       0 [emitted]     app
-app.js   4.12MiB       0 [emitted]     app
-</code>
-                </pre>
-            </section>
-            <section>
-                <pre>
-<code>"scripts": {
-    "build": "webpack --mode=production",
-    "dev": "webpack-dev-server --mode=development",
-}
-</code>
-                </pre>
-            </section>
-            <section class="interior slide light gist">
-                <script src="https://gist.github.com/cfrank/bfd24d2094544e939959189e29c9b8f4.js"></script>
             </section>
             <section>
                 <pre>
@@ -80,6 +54,166 @@ app.css  33.8KiB       0 [emitted]     app
                 <span class="fragment">
                     <img src="assets/grimacing.svg" />
                 </span>
+            </section>
+            <section class="interior slide light gist">
+                <script src="https://gist.github.com/cfrank/bfd24d2094544e939959189e29c9b8f4.js"></script>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <p>Split up webpack configuration</p>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <ul>
+                    <li>webpack.common.js</li>
+                    <li>webpack.dev.js</li>
+                    <li>webpack.prod.js</li>
+                </ul>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>const merge = require('webpack-merge');
+const common = require('webpack.common');
+
+module.exports = merge(common, {
+    ...
+});
+</code>
+                </pre>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                Production Performance
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                Source Maps
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>devtool: 'eval-source-map',
+</code>
+                </pre>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>devtool: 'cheap-module-source-map',
+</code>
+                </pre>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>Asset    Size            Chunks          Chunk Names
+
+[image]    245 bytes       [emitted]
+[image]    575 bytes       [emitted]
+...
+app.css    33.8KiB       0 [emitted]           app
+app.js     428KiB        0 [emitted]     [big] app
+app.js.map 652KiB        0 [emitted]           app
+</code>
+                </pre>
+                <p>2.19MiB - 428KiB = <span class="text-mark">2.1MiB</span></p>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                ModuleConcatenationPlugin()
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                .babelrc
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-noescape>{
+    "presets": ["env", {
+        "targets": {
+            ...
+        },<mark>        "modules": false</mark>    }]
+}
+</code>
+                </pre>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                webpack.prod.js
+            </section>
+            <section>
+                <pre>
+<code data-noescape>const webpack = require('webpack');
+...
+
+module.exports = merge(common, {
+    ...
+
+    plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        ...
+    ],
+}
+</code>
+                </pre>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>Asset    Size            Chunks          Chunk Names
+
+[image]    245 bytes       [emitted]
+[image]    575 bytes       [emitted]
+...
+app.css    33.8KiB       0 [emitted]           app
+app.js     373KiB        0 [emitted]     [big] app
+app.js.map 652KiB        0 [emitted]           app
+</code>
+                </pre>
+                <p>428 KiB - 373KiB = <span class="text-mark">55KiB</span></p>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                Code splitting for better caching
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <P>373KiB</p>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>module.exports = merge(common, {
+    ...
+
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /node_modules/,
+                    name: 'vendor',
+                    chunks: 'initial',
+                    enforce: true,
+                },
+            },
+        },
+    },
+});
+</code>
+                </pre>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>Asset    Size            Chunks          Chunk Names
+
+[image]    245 bytes       [emitted]
+[image]    575 bytes       [emitted]
+...
+app.css       33.8KiB       0 [emitted]           app
+vendor.js     346KiB        0 [emitted]     [big] app
+app.js
+vendor.js.map 650KiB        1 [emitted]           vendor
+app.js.map    650KiB        0 [emitted]           app
+</code>
+                </pre>
+                <p>428 KiB - 373KiB = <span class="text-mark">55KiB</span></p>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                Enabling caching with Deterministic Hashing
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code>output: {
+    filename: '[name].[hash].js',
+},
+</code>
+                </pre>
             </section>
             <section class="closing slide dark" data-background="var(--color-outer-space)">
                 <p>Goodbye world</p>

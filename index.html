@@ -7,11 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Webpack</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700" rel="stylesheet">
-    <link rel="stylesheet" href="./node_modules/reveal.js/css/reveal.css" />
+    <link rel="stylesheet" href="external/reveal.css" />
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="syntax.css">
-    <script src="./node_modules/headjs/dist/1.0.0/head.min.js"></script>
-    <script src="./node_modules/reveal.js/js/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.0/head.min.js"></script>
+    <script src="external/reveal.js"></script>
 </head>
 
 <body>
@@ -568,7 +568,7 @@ app.js.map    105KiB        0 [emitted]           app
             </section>
         </div>
     </div>
-    <script>
+    <script defer>
         Reveal.initialize({
             controls: false,
             controlsTutorial: false,
@@ -579,7 +579,7 @@ app.js.map    105KiB        0 [emitted]           app
             transition: 'fade',
             dependencies: [
                 {
-                    src: './node_modules/reveal.js/plugin/highlight/highlight.js',
+                    src: './external/highlight.js',
                     async: true,
                     callback: () => {
                         hljs.configure({
@@ -591,7 +591,7 @@ app.js.map    105KiB        0 [emitted]           app
                 },
                 {
                     // Speaker notes
-                    src: './node_modules/reveal.js/plugin/notes/notes.js', async: true,
+                    src: './external/notes.js', async: true,
                 },
             ],
         });

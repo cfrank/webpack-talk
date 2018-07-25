@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="syntax.css">
     <script src="./node_modules/headjs/dist/1.0.0/head.min.js"></script>
+    <script src="./node_modules/reveal.js/js/reveal.js"></script>
 </head>
 
 <body>
@@ -18,48 +19,127 @@
         <div class="slides">
             <section class="opening slide dark" data-background="var(--color-outer-space)">
                 <img src="assets/webpack.svg" alt="Webpack Logo" />
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
             </section>
             <section class="assumptions-title slide dark" data-background="var(--color-outer-space)">
                 <h1>Assumptions</h1>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
             </section>
             <section class="assumptions slide dark" data-background="var(--color-outer-space)">
                 <ul>
                     <li>Webpack Experience</li>
                     <li>Webpack Version 4</li>
                 </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>For this talk I'm assuming that most people have a basic understanding of webpack and what it does</li>
+                        <li>If there is interesting in having a more basic webpack talk, I might be able to do it at the next meeting</li>
+                        <li>This talk also uses features introduced in Webpack version 4.</li>
+                        <li>So to use some of the techniques presented in this talk that will be a requirement</li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <p>Case Study</p>
+                <aside class="notes">
+                    <ul>
+                        <li>I'm going to split the talk into two sections.</li>
+                        <li>First I'm going to talk about how I organize my webpack configuration</li>
+                        <li>And then for the rest of the talk I'll give a couple performance tips, to reduce bundle size</li>
+                        <li>For this we will use a case study for our favorite local buisiness</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <img src="assets/pool-pros.png" alt="Pool Pros Logo" />
+                <aside class="notes">
+                    <ul>
+                        <li>I went and found my interview project</li>
+                        <li>I obviously didn't have a whole lot of time to work on the webpack configuration</li>
+                        <li>Because it really sucked</li>
+                        <li>So lets make it better...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>"scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --mode=development",
-}
+<code data-trim>
+webpack --mode=production
+webpack --mode=development
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Webpack version 4 introduces the mode flag</li>
+                        <li>There are two options: development and production</li>
+                        <li>Development sets the node env to development and a couple convenience plugins</li>
+                        <li>Production is a little more interesting</li>
+                        <li>Production sets the node_env to production</li>
+                        <li>And also enables a couple plugins by default</li>
+                        <li>NoEmitOnErrors, UglifyJs, ModuleConcatenationPlugin</li>
+                        <li>So with that set we can see what our base bundle size will be...</li>
+                    </ul>
+                </aside>
             </section>
             <section>
                 <pre>
-<code data-trim data-noescape>
-Asset    Size          Chunks          Chunk Names
-[image]  245 bytes     [emitted]
-[image]  575 bytes     [emitted]
+<code data-trim data-noescape>Asset    Size            Chunks        Chunk Names
+[image]  245 bytes       [emitted]
+[image]  575 bytes       [emitted]
 ...
-app.css  33.8KiB       0 [emitted]     app
+app.css  33.8KiB       0 [emitted]           app
 <mark>app.js   2.19MiB       0 [emitted]     [big] app</mark>
 </code>
                 </pre>
-                <span class="fragment">
-                    <img src="assets/grimacing.svg" />
+                <span class="fragment fade-up">
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <br />
+                    <img height="200" src="assets/no-no-no.gif" />
+                    <img height="200" src="assets/no-no-no.gif" />
+                    <br />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
+                    <img height="50" src="assets/no-no-no.gif" />
                 </span>
-            </section>
-            <section class="interior slide light gist">
-                <script src="https://gist.github.com/cfrank/bfd24d2094544e939959189e29c9b8f4.js"></script>
+                <aside class="notes">
+                    <ul>
+                        <li>Yikes</li>
+                        <li>Our base bundle ends up being 2.19MiB which is massive for production</li>
+                        <li>We can definitely do better than that.</li>
+                        <li>...</li>
+                        <li>But first I want to take a second to go over how I set up my webpack configuration to make configuring it as easy as possible</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 <p>Split up webpack configuration</p>
+                <aside class="notes">
+                    <ul>
+                        <li>Splitting up the configuration helps make it easier to differenciate between production and development</li>
+                        <li>Reduces the number of conditionals</li>
+                        <li>Which in turn decreases complexity</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 <ul>
@@ -67,9 +147,17 @@ app.css  33.8KiB       0 [emitted]     app
                     <li>webpack.dev.js</li>
                     <li>webpack.prod.js</li>
                 </ul>
+                <aside class="notes">
+                    <ul>
+                        <li>Common keeps your rules and other base configs</li>
+                        <li>Development keeps your development server configuration and other settings only run in development</li>
+                        <li>And production keeps your production...</li>
+                        <li>So here is a simple example for how to combine the file</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
-                <pre>
+                <pre
 <code>const merge = require('webpack-merge');
 const common = require('webpack.common');
 
@@ -78,28 +166,63 @@ module.exports = merge(common, {
 });
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Talk about webpack-merge</li>
+                        <li>...</li>
+                        <li>Now I want to talk about a few tips you can use to decrease... the size of the code sent down to your users</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 Production Performance
+                <aside class="notes">
+                    <ul>
+                        <li>...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 Source Maps
+                <aside class="notes">
+                    <ul>
+                        <li>Source maps are a black box</li>
+                        <li>Never work</li>
+                        <li>I change them every project</li>
+                        <li>But on pool pros I was using...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
 <code>devtool: 'eval-source-map',
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>This is horrible for performance</li>
+                        <li>Adds the source inline into the output file</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
 <code>devtool: 'cheap-module-source-map',
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Build times are a little slow</li>
+                        <li>Production builds should be run too many times</li>
+                        <li>But it builds to a seperate file which is only pulled down when you use the developer tools</li>
+                        <li>By making this change...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>Asset    Size            Chunks          Chunk Names
+<code data-trim>
+Asset      Size            Chunks        Chunk Names
 
 [image]    245 bytes       [emitted]
 [image]    575 bytes       [emitted]
@@ -109,17 +232,56 @@ app.js     428KiB        0 [emitted]     [big] app
 app.js.map 652KiB        0 [emitted]           app
 </code>
                 </pre>
-                <p>2.19MiB - 428KiB = <span class="text-mark">2.1MiB</span></p>
+                <p>2.19MiB -> 428KiB</p>
+                <p class="fragment"><span class="text-mark">1.85MiB</span></p>
+                <aside class="notes">
+                    <ul>
+                        <li>You end up with a much smaller bundle size</li>
+                        <li>...</li>
+                        <li>Getting rid of 1.8 megs is quite nice</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 ModuleConcatenationPlugin()
-            </section>
-            <section class="interior slide dark" data-background="var(--color-outer-space)">
-                .babelrc
+                <aside class="notes">
+                    <ul>
+                        <li>The next thing I want to talk abou is the module concatenation plugin</li>
+                        <li>It's included by default when you use mode=production</li>
+                        <li>One thing to known this plugin only works on es6 modules</li>
+                        <li>...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code data-noescape>{
+<code data-trim>
+    import App from './App';
+</code>
+                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>This allows webpack to perform scope hoisting</li>
+                        <li>It also prevents having each module in your bundle wrapped in a closure</li>
+                        <li>When this plugin is used correctly your code will not only be somewhat smaller, but also run quicker</li>
+                        <li>Since you aren't referencing a closure everytime you use a module</li>
+                        <li>But if you are using babel you might be loosing out</li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                .babelrc
+                <aside class="notes">
+                    <ul>
+                        <li>If you are using babel it will, by default, compile down your es6 modules</li>
+                        <li>We want webpack to manage our modules for us, and use it's supperiour module resolution</li>
+                        <li>In order to prevent babel from doing this we need to make a quick change to the babelrc file</li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-noescape data-trim>{
     "presets": ["env", {
         "targets": {
             ...
@@ -127,51 +289,63 @@ app.js.map 652KiB        0 [emitted]           app
 }
 </code>
                 </pre>
-            </section>
-            <section class="interior slide dark" data-background="var(--color-outer-space)">
-                webpack.prod.js
-            </section>
-            <section>
-                <pre>
-<code data-noescape>const webpack = require('webpack');
-...
-
-module.exports = merge(common, {
-    ...
-
-    plugins: [
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        ...
-    ],
-}
-</code>
-                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>By setting modules: false, we tell babel that it should just pass es6 modules right into webpack unchanged</li>
+                        <li>And with that we can see the result </li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>Asset    Size            Chunks          Chunk Names
+<code data-trim>
+Asset      Size            Chunks        Chunk Names
 
 [image]    245 bytes       [emitted]
 [image]    575 bytes       [emitted]
 ...
 app.css    33.8KiB       0 [emitted]           app
 app.js     373KiB        0 [emitted]     [big] app
-app.js.map 652KiB        0 [emitted]           app
+app.js.map 250KiB        0 [emitted]           app
 </code>
                 </pre>
-                <p>428 KiB - 373KiB = <span class="text-mark">55KiB</span></p>
+                <p>2.19MiB -> 428 KiB -> 373KiB</p>
+                <br />
+                <p class="fragment">
+                    <span class="text-mark">55KiB</span>
+                    <span class="fragment">(1.91MiB)</span>
+                </p>
+                <aside class="notes">
+                    <ul>
+                        <li>Two fragments</li>
+                        <li>We have gone from 428k to 373k </li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 Code splitting for better caching
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 <P>373KiB</p>
+                <aside class="notes">
+                    <ul>
+                        <li>So our bundle size is 373k</li>
+                        <li>This isn't too bad, but not all of this is our code</li>
+                        <li>and most of the time changes to our code base are focused on code which we have wrote ourselves</li>
+                        <li>Not code in node_modules for example</li>
+                        <li>...</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>module.exports = merge(common, {
-    ...
-
+<code data-trim>
+module.exports = merge(common, {
     optimization: {
         splitChunks: {
             cacheGroups: {
@@ -187,41 +361,214 @@ app.js.map 652KiB        0 [emitted]           app
 });
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>By using the splitChunk feature of webpack we can take all the external code and move it to it's own file which can be cached long-term</li>
+                        <li>This way when you make a change to one of your apps file, your users only need to pull down the relevent content.</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>Asset    Size            Chunks          Chunk Names
+<code data-noescape data-trim>
+Asset         Size            Chunks       Chunk Names
 
-[image]    245 bytes       [emitted]
-[image]    575 bytes       [emitted]
+[image]       245 bytes       [emitted]
+[image]       575 bytes       [emitted]
 ...
-app.css       33.8KiB       0 [emitted]           app
-vendor.js     346KiB        0 [emitted]     [big] app
-app.js
-vendor.js.map 650KiB        1 [emitted]           vendor
-app.js.map    650KiB        0 [emitted]           app
+app.css       33.8KiB       0 [emitted]          app
+<mark>vendor.js     346KiB        0 [emitted]    [big] vendor</mark>vendor.js.map 5.32 KiB      1 [emitted]          vendor
+<mark>app.js        31.6 KiB      0 [emitted]          app</mark>app.js.map    150KiB        0 [emitted]          app
 </code>
                 </pre>
-                <p>428 KiB - 373KiB = <span class="text-mark">55KiB</span></p>
+                <p class="fragment">Application code <span class="text-mark">31.6KiB</span></p>
+                <aside class="notes">
+                    <ul>
+                        <li>So here we see that our application code only takes 31K</li>
+                        <li>And our vendor bundle (the node_modules) takes 346k </li>
+                        <li>So lets take a look at how we can make caching these files easier</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide dark" data-background="var(--color-outer-space)">
                 Enabling caching with Deterministic Hashing
+                <aside class="notes">
+                    <ul>
+                        <li>Webpack v4 makes caching files and invalidating extremely simple</li>
+                    </ul>
+                </aside>
             </section>
             <section class="interior slide light" data-background="var(--color-concrete)">
                 <pre>
-<code>output: {
-    filename: '[name].[hash].js',
+<code data-trim>
+output: {
+    filename: '[name].[chunkhash].js',
 },
 </code>
                 </pre>
+                <aside class="notes">
+                    <ul>
+                        <li>Webpack allows you dynamically change your output names based on content</li>
+                        <li>Here we are saying we want a file with the module name, and the chunkhash</li>
+                        <li>A chunk hash takes the content of the chunk (ie. our vendor chunk)</li>
+                        <li>And creates a hash which is added to the filename</li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <p>Visualizing dependencies</p>
+                <aside class="notes">
+                    <ul>
+                        <li>And last but not least. In order to optimize even further you need to understand everything that is going into your bundle</li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-trim>
+yarn add webpack-visualizer-plugin -D
+</code>
+                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-trim>
+const Visualizer = require('webpack-visualizer-plugin');
+...
+
+module.exports = merge(common, {
+    ...
+
+    plugins: [
+        new Visualizer(),
+        ...
+    ],
+}
+</code>
+                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <img
+                    src="./assets/visualizer.png"
+                    alt="The default view of the webpack visualizer plugin"
+                />
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <img
+                    src="./assets/lodash.png"
+                    alt="The webpack visualizer plugin showing lodash taking a shit load of space"
+                />
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-trim>
+import _ from 'lodash';
+</code>
+                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-trim>
+import forEach from 'lodash/forEach';
+</code>
+                </pre>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <img
+                    src="./assets/lodash-2.png"
+                    alt="The webpack visualizer plugin showing a much smaller lodash"
+                    height="650"
+                />
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide light" data-background="var(--color-concrete)">
+                <pre>
+<code data-trim>
+Asset         Size            Chunks        Chunk Names
+
+[image]       245 bytes       [emitted]
+[image]       575 bytes       [emitted]
+...
+app.css       33.8KiB       0 [emitted]           app
+vendor.js     277KiB        0 [emitted]     [big] vendor
+app.js        31.6 KiB      0 [emitted]           app
+vendor.js.map 5.32 KiB      1 [emitted]           vendor
+app.js.map    105KiB        0 [emitted]           app
+</code>
+                </pre>
+                <p>2.19MiB -> 428 KiB -> 373KiB -> 277KiB</p>
+                <br />
+                <p class="fragment">
+                    <span class="text-mark">98KiB</span>
+                    <span class="fragment">(2.01MiB)</span>
+                </p>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
+            </section>
+            <section class="interior slide dark" data-background="var(--color-outer-space)">
+                <ul>
+                    <li>mode</li>
+                    <li>Webpack configuration splitting</li>
+                    <li>Source Maps</li>
+                    <li>ModuleConcatenationPlugin</li>
+                    <li>Code splitting</li>
+                    <li>Deterministic Hashing</li>
+                    <li>Visualizing dependencies</li>
+                </ul>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
             </section>
             <section class="closing slide dark" data-background="var(--color-outer-space)">
-                <p>Goodbye world</p>
+                <p>Questions?</p>
+                <aside class="notes">
+                    <ul>
+                        <li></li>
+                    </ul>
+                </aside>
             </section>
         </div>
     </div>
-    <script src="./node_modules/reveal.js/js/reveal.js"></script>
-    <script defer>
+    <script>
         Reveal.initialize({
             controls: false,
             controlsTutorial: false,
@@ -242,9 +589,12 @@ app.js.map    650KiB        0 [emitted]           app
                         hljs.initHighlightingOnLoad();
                     }
                 },
+                {
+                    // Speaker notes
+                    src: './node_modules/reveal.js/plugin/notes/notes.js', async: true,
+                },
             ],
         });
     </script>
 </body>
-
 </html>
